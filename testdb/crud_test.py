@@ -1,9 +1,13 @@
 import pytest
-from models import Algorithm, Framework, FileRecord
-from algorithm_repository import AlgorithmRepository
-from framework_repository import FrameworkRepository
-from file_repository import FileRepository
+from models.models import Algorithm, Framework, FileRecord
+from repository.algorithm_repository import AlgorithmRepository
+from repository.framework_repository import FrameworkRepository
+from repository.file_repository import FileRepository
 
+
+"""
+Comanda rulare: python -m pytest testdb/crud_test.py -v
+"""
 
 @pytest.fixture
 def alg_repo(): 

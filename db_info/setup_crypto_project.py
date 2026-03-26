@@ -228,7 +228,7 @@ Table keys_storage {
   id bigint [pk, increment]
   name varchar(100) [not null]
   algorithm_id bigint [not null]
-  key_type varchar(20) [not null, note: 'SYMMETRIC / PUBLIC / PRIVATE']
+  key_type varchar(20) [not null, note: 'PUBLIC / PRIVATE']
   key_size int [not null]
   key_path varchar(255)
   key_value_encrypted text

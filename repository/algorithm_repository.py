@@ -1,5 +1,5 @@
-from db import get_connection
-from models import Algorithm
+from db_info.db import get_connection
+from models.models import Algorithm
 
 
 class AlgorithmRepository:
