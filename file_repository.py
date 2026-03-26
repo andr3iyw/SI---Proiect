@@ -70,3 +70,35 @@ class FileRepository:
         cursor.close()
         connection.close()
         return affected
+    
+    def replace(self, file_id: int, file_record: FileRecord):
+        connection = get_connection()
+        cursor = connection.cursor()
+
+        query = """
+        UPDATE files
+        SET original_name = %s, original_path = %s, encrypted_path = %s, 
+            decrypted_path = %s, file_extension = %s, size_bytes = %s, 
+            checksum = %s, status = %s
+        WHERE id = %s
+        """
+        values = (
+            file_record.original_name,
+            file_record.original_path,
+            file_record.encrypted_path,
+            file_record.decrypted_path,
+            file_record.file_extension,
+            file_record.size_bytes,
+            file_record.checksum,
+            file_record.status,
+            file_id
+        )
+
+        cursor.execute(query, values)
+        connection.commit()
+        
+        affected = cursor.rowcount
+
+        cursor.close()
+        connection.close()
+        return affected

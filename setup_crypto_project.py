@@ -5,8 +5,8 @@ from pathlib import Path
 DB_CONFIG = {
     "host": "127.0.0.1",
     "port": 3306,
-    "user": "root",
-    "password": "root",
+    "user": "crypto_user",
+    "password": "crypto_user",
     "use_pure": True
 }
 

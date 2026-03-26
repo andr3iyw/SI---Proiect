@@ -80,3 +80,31 @@ class AlgorithmRepository:
         cursor.close()
         connection.close()
         return affected
+    
+    def replace(self, algorithm_id: int, algorithm: Algorithm):
+        connection = get_connection()
+        cursor = connection.cursor()
+
+        query = """
+        UPDATE algorithms
+        SET name = %s, type = %s, mode = %s, description = %s, default_key_size = %s, is_active = %s
+        WHERE id = %s
+        """
+        values = (
+            algorithm.name,
+            algorithm.type,
+            algorithm.mode,
+            algorithm.description,
+            algorithm.default_key_size,
+            algorithm.is_active,
+            algorithm_id
+        )
+
+        cursor.execute(query, values)
+        connection.commit()
+        
+        affected = cursor.rowcount
+
+        cursor.close()
+        connection.close()
+        return affected

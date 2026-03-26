@@ -1,71 +1,126 @@
+import pytest
 from models import Algorithm, Framework, FileRecord
 from algorithm_repository import AlgorithmRepository
 from framework_repository import FrameworkRepository
 from file_repository import FileRepository
 
 
-def test_algorithm_crud():
-    repo = AlgorithmRepository()
+@pytest.fixture
+def alg_repo(): 
+    return AlgorithmRepository()
 
-    print("\n--- TEST ALGORITHM CRUD ---")
+@pytest.fixture
+def fw_repo(): 
+    return FrameworkRepository()
 
-    new_algorithm = Algorithm(
-        id=None,
-        name="ChaCha20",
-        type="SYMMETRIC",
-        mode=None,
-        description="Test algorithm",
-        default_key_size=256,
+@pytest.fixture
+def file_repo(): 
+    return FileRepository()
+
+
+def test_algorithm_crud(alg_repo):
+    new_alg = Algorithm(
+        id=None, 
+        name="ChaCha20_Test", 
+        type="SYMMETRIC", 
+        mode=None, 
+        description="Test algorithm", 
+        default_key_size=256, 
         is_active=True
     )
+    alg_id = None
+    
+    try:
+        # Create
+        alg_id = alg_repo.create(new_alg)
+        assert alg_id is not None
+        
+        # Read
+        algs = alg_repo.get_all()
+        assert any(a['id'] == alg_id for a in algs)
+        
+        # Update
+        alg_repo.update(alg_id, "ChaCha20_Upd", "Descriere modificata")
+        upd_alg = alg_repo.get_by_id(alg_id)
+        assert upd_alg['name'] == "ChaCha20_Upd"
+        assert upd_alg['description'] == "Descriere modificata"
 
-    algorithm_id = repo.create(new_algorithm)
-    print(f"Inserted algorithm id: {algorithm_id}")
+        # Replace
+        rep_alg = Algorithm(
+            id=alg_id,
+            name="AES_Test_Replace",
+            type="SYMMETRIC",
+            mode="GCM",
+            description="Algoritm inlocuit",
+            default_key_size=128,
+            is_active=False
+        )
+        alg_repo.replace(alg_id, rep_alg)
+        replaced_alg = alg_repo.get_by_id(alg_id)
+        assert replaced_alg['name'] == "AES_Test_Replace"
+        assert replaced_alg['mode'] == "GCM"
+        assert replaced_alg['is_active'] == 0
 
-    all_algorithms = repo.get_all()
-    print("All algorithms:", all_algorithms)
-
-    repo.update(algorithm_id, "ChaCha20-Updated", "Updated description")
-    updated_algorithm = repo.get_by_id(algorithm_id)
-    print("Updated algorithm:", updated_algorithm)
-
-    repo.delete(algorithm_id)
-    print(f"Deleted algorithm id: {algorithm_id}")
+    finally:
+        # Delete
+        if alg_id is not None:
+            alg_repo.delete(alg_id)
+            after_delete = alg_repo.get_by_id(alg_id)
+            assert after_delete is None
 
 
-def test_framework_crud():
-    repo = FrameworkRepository()
-
-    print("\n--- TEST FRAMEWORK CRUD ---")
-
-    new_framework = Framework(
+def test_framework_crud(fw_repo):
+    new_fw = Framework(
         id=None,
-        name="PyCryptodome",
+        name="PyCryptodome_Test",
         version="3.20",
         language="Python",
         description="Test framework",
         is_active=True
     )
+    fw_id = None
+    
+    try:
+        # Create
+        fw_id = fw_repo.create(new_fw)
+        assert fw_id is not None
+        
+        # Read
+        fws = fw_repo.get_all()
+        assert any(f['id'] == fw_id for f in fws)
+        
+        # Update
+        fw_repo.update(fw_id, "3.21", "Updated framework")
+        fws_after_upd = fw_repo.get_all()
+        updated_fw = next((f for f in fws_after_upd if f['id'] == fw_id), None)
+        assert updated_fw is not None
+        assert updated_fw['version'] == "3.21"
+        
+        # Replace
+        rep_fw = Framework(
+            id=fw_id,
+            name="BouncyCastle_Replace",
+            version="1.78",
+            language="Java",
+            description="Framework inlocuit",
+            is_active=False
+        )
+        fw_repo.replace(fw_id, rep_fw)
+        fws_after_rep = fw_repo.get_all()
+        replaced_fw = next((f for f in fws_after_rep if f['id'] == fw_id), None)
+        assert replaced_fw is not None
+        assert replaced_fw['name'] == "BouncyCastle_Replace"
+        assert replaced_fw['language'] == "Java"
+        
+    finally:
+        # Delete
+        if fw_id is not None:
+            fw_repo.delete(fw_id)
+            fws_final = fw_repo.get_all()
+            assert not any(f['id'] == fw_id for f in fws_final)
 
-    framework_id = repo.create(new_framework)
-    print(f"Inserted framework id: {framework_id}")
 
-    all_frameworks = repo.get_all()
-    print("All frameworks:", all_frameworks)
-
-    repo.update(framework_id, "3.21", "Updated framework")
-    updated_frameworks = repo.get_all()
-    print("Frameworks after update:", updated_frameworks)
-
-    repo.delete(framework_id)
-    print(f"Deleted framework id: {framework_id}")
-
-
-def test_file_crud():
-    repo = FileRepository()
-
-    print("\n--- TEST FILE CRUD ---")
-
+def test_file_crud(file_repo):
     new_file = FileRecord(
         id=None,
         original_name="test_file.txt",
@@ -77,23 +132,46 @@ def test_file_crud():
         checksum="test123",
         status="UPLOADED"
     )
-
-    file_id = repo.create(new_file)
-    print(f"Inserted file id: {file_id}")
-
-    all_files = repo.get_all()
-    print("All files:", all_files)
-
-    repo.update_status(file_id, "ENCRYPTED")
-    updated_files = repo.get_all()
-    print("Files after update:", updated_files)
-
-    repo.delete(file_id)
-    print(f"Deleted file id: {file_id}")
-
-
-if __name__ == "__main__":
-    test_algorithm_crud()
-    test_framework_crud()
-    test_file_crud()
-    print("\nAll CRUD tests finished.")
+    file_id = None
+    
+    try:
+        # Create
+        file_id = file_repo.create(new_file)
+        assert file_id is not None
+        
+        # Read
+        files = file_repo.get_all()
+        assert any(f['id'] == file_id for f in files)
+        
+        # Update
+        file_repo.update_status(file_id, "ENCRYPTED")
+        files_after_upd = file_repo.get_all()
+        updated_file = next((f for f in files_after_upd if f['id'] == file_id), None)
+        assert updated_file is not None
+        assert updated_file['status'] == "ENCRYPTED"
+        
+        # Replace
+        rep_file = FileRecord(
+            id=file_id,
+            original_name="replaced_file.txt",
+            original_path="D:/replaced/test.txt",
+            encrypted_path="D:/replaced/enc.txt",
+            decrypted_path=None,
+            file_extension="txt",
+            size_bytes=2048,
+            checksum="rep456",
+            status="DECRYPTED"
+        )
+        file_repo.replace(file_id, rep_file)
+        files_after_rep = file_repo.get_all()
+        replaced_file = next((f for f in files_after_rep if f['id'] == file_id), None)
+        assert replaced_file is not None
+        assert replaced_file['original_name'] == "replaced_file.txt"
+        assert replaced_file['status'] == "DECRYPTED"
+        
+    finally:
+        # Delete
+        if file_id is not None:
+            file_repo.delete(file_id)
+            files_final = file_repo.get_all()
+            assert not any(f['id'] == file_id for f in files_final)
