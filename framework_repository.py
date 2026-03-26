@@ -68,3 +68,30 @@ class FrameworkRepository:
         cursor.close()
         connection.close()
         return affected
+    
+    def replace(self, framework_id: int, framework: Framework):
+        connection = get_connection()
+        cursor = connection.cursor()
+
+        query = """
+        UPDATE frameworks
+        SET name = %s, version = %s, language = %s, description = %s, is_active = %s
+        WHERE id = %s
+        """
+        values = (
+            framework.name,
+            framework.version,
+            framework.language,
+            framework.description,
+            framework.is_active,
+            framework_id
+        )
+
+        cursor.execute(query, values)
+        connection.commit()
+        
+        affected = cursor.rowcount
+
+        cursor.close()
+        connection.close()
+        return affected
