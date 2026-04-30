@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import Optional
+from datetime import datetime
 
 
 @dataclass
@@ -34,3 +35,32 @@ class FileRecord:
     size_bytes: int
     checksum: Optional[str]
     status: str = "UPLOADED"
+
+
+@dataclass
+class KeyStorage:
+    id: Optional[int]
+    name: str
+    algorithm_id: int
+    key_type: str
+    key_size: int
+    key_path: Optional[str]
+    key_value_encrypted: Optional[str]
+    created_at: Optional[datetime] = None
+    expires_at: Optional[datetime] = None
+    is_active: bool = True
+
+@dataclass
+class CryptoOperation:
+    id: Optional[int]
+    file_id: int
+    algorithm_id: int
+    key_id: int
+    framework_id: int
+    operation_type: str
+    started_at: Optional[datetime] = None
+    ended_at: Optional[datetime] = None
+    duration_ms: Optional[int] = None
+    success: bool = False
+    error_message: Optional[str] = None
+    
