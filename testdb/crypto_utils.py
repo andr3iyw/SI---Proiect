@@ -1,8 +1,9 @@
+"""
 import hashlib
 import os
 
 def calculate_file_checksum(file_path: str) -> str:
-    """Calculeaza hash-ul SHA-256 al unui fisier."""
+    #Calculeaza hash-ul SHA-256 al unui fisier.
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"Eroare: Fisierul nu a fost gasit la {file_path}")
 
@@ -15,7 +16,9 @@ def calculate_file_checksum(file_path: str) -> str:
     return sha256_hash.hexdigest()
 
 def get_file_size(file_path: str) -> int:
-    """Returneaza dimensiunea fisierului in bytes."""
+    #Returneaza dimensiunea fisierului in bytes.
     if not os.path.exists(file_path):
         return 0
     return os.path.getsize(file_path)
+"""
+

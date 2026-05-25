@@ -58,7 +58,7 @@ def main():
             try: k_id = int(input("ID Cheie: "))
             except: continue
 
-            # Selectie Framework (Cerința Milestone 2 - Framework Alternativ)
+            # Selectie Framework (Framework Alternativ)
             print("\n--- Selectati Framework-ul pentru testare ---")
             print("[1] OpenSSL (Cryptography)")
             print("[2] PyCryptodome (Alternativ)")

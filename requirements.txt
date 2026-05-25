@@ -4,3 +4,7 @@ packaging==26.0
 pluggy==1.6.0
 Pygments==2.19.2
 pytest==9.0.2
+cryptography==44.0.0
+pycryptodome==3.21.0
+psutil==6.1.1
+pynacl==1.5.0
