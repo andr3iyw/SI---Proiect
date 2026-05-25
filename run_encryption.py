@@ -6,7 +6,6 @@ def main():
     service = CryptoService()
     
     try:
-        # Apelam inima aplicatiei: 
         # file_id = 1 (document.txt), key_id = 1 (AES_Main_Key), framework_id = 1 (OpenSSL)
         encrypted_path = service.encrypt_file_aes(file_id=1, key_id=1, framework_id=1)
         
