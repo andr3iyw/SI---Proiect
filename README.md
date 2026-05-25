@@ -1,6 +1,8 @@
 # Documentație proiect - Sistem de gestiune criptografică
 
 ## 1. Scopul aplicației și arhitectura generală
+<img width="1337" height="836" alt="648296207_3917039508433544_8289299592080117347_n" src="https://github.com/user-attachments/assets/73de978a-e069-4c1c-90b9-7e80728bd897" />
+
 
 Proiectul implementează un sistem de gestiune criptografică pentru importul, criptarea, decriptarea și monitorizarea performanței operațiilor efectuate asupra fișierelor. Aplicația permite lucrul cu mai multe algoritmi și framework-uri criptografice, stochează metadatele în MySQL și oferă atât o interfață CLI, cât și o interfață grafică realizată cu `customtkinter`.
 
